@@ -13,7 +13,7 @@ struct move_s {
 
 class bgn_class : public fopAc_ac_c {
 public:
-    /* Place member variables here */
+    /* 0x290 */ u8 m0290[0xc74c - 0x290];
 };
 
 class daBgn_HIO_c {

@@ -4,34 +4,286 @@
 //
 
 #include "d/actor/d_a_att.h"
+#include "d/d_procname.h"
 #include "dolphin/types.h"
+#include "f_op/f_op_actor_mng.h"
+#include "d/d_com_inf_game.h"
+#include "d/actor/d_a_bgn.h"
+
+static bgn_class* dummy_boss;
+static u8 dummy_4061[0xC];
+static u8 dummy_non_pos[0xC];
+
+// Needed for the .data section to match.
+static Vec dummy_2100 = {1.0f, 1.0f, 1.0f};
+static Vec dummy_2080 = {1.0f, 1.0f, 1.0f};
+static u8 dummy_1811[] = {0x02, 0x00, 0x02, 0x01};
+
+static dCcD_SrcSph bm_sph_src = {
+        // dCcD_SrcGObjInf
+        {
+            /* Flags             */ 0,
+            /* SrcObjAt  Type    */ AT_TYPE_WATER,
+            /* SrcObjAt  Atp     */ 0,
+            /* SrcObjAt  SPrm    */ AT_SPRM_SET | AT_SPRM_VS_ENEMY | AT_SPRM_VS_OTHER,
+            /* SrcObjTg  Type    */ 0,
+            /* SrcObjTg  SPrm    */ TG_SPRM_SET | TG_SPRM_IS_ENEMY,
+            /* SrcObjCo  SPrm    */ 0,
+            /* SrcGObjAt Se      */ 0,
+            /* SrcGObjAt HitMark */ 0,
+            /* SrcGObjAt Spl     */ 0,
+            /* SrcGObjAt Mtrl    */ 0,
+            /* SrcGObjAt SPrm    */ 0,
+            /* SrcGObjTg Se      */ 0,
+            /* SrcGObjTg HitMark */ 0,
+            /* SrcGObjTg Spl     */ 0,
+            /* SrcGObjTg Mtrl    */ 0,
+            /* SrcGObjCo SPrm    */ 0,
+        },
+        // cM3dGSphS
+        {
+            /* Center */ 0.0f, 0.0f, 0.0f,
+            /* Radius */ 100.0f,
+        },
+    };
+
+static dCcD_SrcCyl cc_cyl_src = {
+    // dCcD_SrcGObjInf
+    {
+        /* Flags             */ 0,
+        /* SrcObjAt  Type    */ AT_TYPE_SKULL_HAMMER,
+        /* SrcObjAt  Atp     */ 0,
+        /* SrcObjAt  SPrm    */ AT_SPRM_SET | AT_SPRM_GRP,
+        /* SrcObjTg  Type    */ AT_TYPE_ALL,
+        /* SrcObjTg  SPrm    */ TG_SPRM_SET | TG_SPRM_IS_ENEMY,
+        /* SrcObjCo  SPrm    */ CO_SPRM_SET | CO_SPRM_IS_UNK4 | CO_SPRM_VSGRP,
+        /* SrcGObjAt Se      */ 0,
+        /* SrcGObjAt HitMark */ 0,
+        /* SrcGObjAt Spl     */ 0,
+        /* SrcGObjAt Mtrl    */ 0,
+        /* SrcGObjAt SPrm    */ 0,
+        /* SrcGObjTg Se      */ dCcD_SE_UNK5,
+        /* SrcGObjTg HitMark */ G_TG_MARK_PURPLE_HIT,
+        /* SrcGObjTg Spl     */ 0,
+        /* SrcGObjTg Mtrl    */ 0,
+        /* SrcGObjTg SPrm    */ G_TG_SPRM_SHIELD | G_TG_SPRM_NO_CON_HIT,
+        /* SrcGObjCo SPrm    */ 0,
+    },
+    // cM3dGCylS
+    {
+        /* Center */ 0.0f, 0.0f, 0.0f,
+        /* Radius */ 250.0f,
+        /* Height */ 400.0f,
+    },
+};
+
+static const u8 dummy_4131[] = {
+    0x45, 0xBB, 0x80, 0x00, 0x3F, 0x80, 0x00, 0x00,
+    0xBF, 0x80, 0x00, 0x00, 0x43, 0x48, 0x00, 0x00,
+    0x44, 0x7A, 0x00, 0x00, 0xC6, 0xEA, 0x60, 0x00,
+};
 
 /* 000000EC-000000F4       .text daAtt_Draw__FP9att_class */
 static BOOL daAtt_Draw(att_class*) {
-    /* Nonmatching */
+    return TRUE;
 }
 
 /* 000000F4-00000140       .text boss_s_sub__FPvPv */
-void boss_s_sub(void*, void*) {
-    /* Nonmatching */
+fopAc_ac_c* boss_s_sub(void* pActor, void*) {
+    fopAc_ac_c* i_this = (fopAc_ac_c*)pActor;
+    if (fopAc_IsActor(i_this) != 0 && fopAcM_GetName(i_this) == PROC_BGN) {
+        return i_this;
+    }
+    return NULL;
 }
 
 /* 00000140-0000052C       .text daAtt_Execute__FP9att_class */
-static BOOL daAtt_Execute(att_class*) {
-    /* Nonmatching */
+static BOOL daAtt_Execute(att_class* i_this) {
+    u32 iVar1 = 0;
+    u32 sVar3 = 0;
+    cXyz local_28 [2];
+    if (i_this->m0298[0x02B5 - 0x0298] == 0x65) {
+        i_this->eyePos = i_this->current.pos;
+
+        i_this->attention_info.position = i_this->eyePos;
+
+        // i_this->actor_status = i_this->actor_status & 0xFFFFFFFF; // clrrwi r0, 0, 0 ; ????
+        fopAcM_OffStatus(i_this, 0);
+
+        i_this->attention_info.flags = 0;
+
+        i_this->mSph.SetC(i_this->current.pos);
+
+        g_dComIfG_gameInfo.play.mCcS.Set(&i_this->mSph);
+    }
+    if (i_this->m0298[0x02B5 - 0x0298] == 0x64) {
+        i_this->eyePos = i_this->current.pos;
+
+        i_this->attention_info.position = i_this->eyePos;
+    } else {
+        dummy_boss = (bgn_class *)fpcEx_Search((fpcLyIt_JudgeFunc)boss_s_sub, i_this);
+        if (dummy_boss == NULL) {
+            return 1;
+        }
+
+        /**
+         * @brief What the fuck is this? An index, maybe?
+         * 
+         */
+        u32 unk0 = i_this->m0298[0x02B5 - 0x0298];
+
+        if ((int)static_cast<signed char>(i_this->m0550[0])) {
+            i_this->m0550[0]--;
+        }
+        if (
+            !((int)static_cast<signed char>(i_this->m0550[0]))
+        && 
+            i_this->mCyl.ChkTgHit() || i_this->mSph.ChkTgHit()
+        ) {
+            i_this->m0550[0] = 10;
+            unk0 = (u32)dummy_boss + 65536UL;
+            iVar1 = unk0 * 0x30c;
+            *(u8 *)((u32)unk0 + (unk0 * 0x30c) + 0xadb0) = *(u8 *)((u32)unk0 + (unk0 * 0x30c) + 0xadb0) - 1;
+            if (*(u8 *)((u32)dummy_boss + (unk0 * 0x30c) + 0xadb0) < '\x01') {
+                *(u8 *)((u32)dummy_boss + (unk0 * 0x30c) + 0xad78) = 1;
+                *(s32 *)((u32)dummy_boss + (unk0 * 0x30c) + 0xadac) = 0x45bb8000;
+                sVar3 = dComIfGp_getReverb(i_this->current.roomNo);
+                mDoAud_seStart(
+                    JA_SE_LK_W_WEP_HIT
+                );
+                if ((unk0 < 2) && (*(u8 *)((int)dummy_boss + (1 - unk0) * 0x30c + 0xad78) != '\0')) {
+                    *(s32 *)((int)dummy_boss + 0xc7b0) = 600;
+                }
+            } else {
+                *(s32 *)((int)dummy_boss + (unk0 * 0x30c) + 0xada8) = 0xf;
+                sVar3 = dComIfGp_getReverb(i_this->current.roomNo);
+                mDoAud_seStart(
+                    JA_SE_CM_BGN_D_STRING_PLINK
+                );
+            }
+        }
+        
+        cXyz *puVar2 = (cXyz *)((int)dummy_boss + unk0 * 0xc + 0xc33c);
+        i_this->current.pos.x = puVar2->x;
+        i_this->current.pos.y = puVar2->y;
+        i_this->current.pos.z = puVar2->z;
+        local_28[0].x = i_this->current.pos.x;
+        local_28[0].y = i_this->current.pos.y;
+        local_28[0].z = i_this->current.pos.z;
+        if (
+            (
+                (
+                    i_this->m0298[0x02B5 - 0x0298] == '\0'
+                ) 
+            ||
+                (
+                    (
+                        (
+                            *(short *)((int)dummy_boss + 0xc748) == 0 
+                        && 
+                            (*(short *)((int)dummy_boss + 0xc74c) == 0)
+                        ) 
+                    &&
+                        (unk0 == 7)
+                    )
+                )
+            )
+        ||
+            (
+                (
+                    *(u8 *)((int)dummy_boss + unk0 * 0x30c + 0xad78) != '\0' 
+                ||
+                    (*(float *)((int)dummy_boss + unk0 * 0x30c + 0xad94) >= 1.0)
+                )
+            )
+        ) {
+
+            i_this->attention_info.flags = fopAc_Attn_LOCKON_ENEMY_e;
+            i_this->mCyl.SetR(200.0);
+            i_this->mCyl.SetC(local_28[0]);
+            local_28[0].y = local_28[0].y + 1000.0;
+            i_this->mSph.SetC(local_28[0]);
+            i_this->eyePos.x = local_28[0].x;
+            i_this->eyePos.y = local_28[0].y;
+            i_this->eyePos.z = local_28[0].z;
+            i_this->attention_info.position.x = local_28[0].x;
+            i_this->attention_info.position.y = local_28[0].y;
+            i_this->attention_info.position.z = local_28[0].z;
+
+        }
+        else {
+            fopAcM_OffStatus(i_this, 0);
+            // *(u32 *)((int)i_this + 0x1c4) = *(u32 *)((int)i_this + 0x1c4);
+
+            i_this->attention_info.flags = 0;
+            i_this->mCyl.SetC(*((cXyz *)dummy_non_pos));
+            i_this->mSph.SetC(*((cXyz *)&dummy_non_pos));
+        }
+        g_dComIfG_gameInfo.play.mCcS.Set(&i_this->mCyl);
+        g_dComIfG_gameInfo.play.mCcS.Set(&i_this->mSph);
+    }
+    return 1;
 }
 
 /* 00000568-00000570       .text daAtt_IsDelete__FP9att_class */
 static BOOL daAtt_IsDelete(att_class*) {
-    /* Nonmatching */
+    return TRUE;
 }
 
 /* 00000570-00000578       .text daAtt_Delete__FP9att_class */
 static BOOL daAtt_Delete(att_class*) {
-    /* Nonmatching */
+    return TRUE;
 }
 
 /* 00000578-00000768       .text daAtt_Create__FP10fopAc_ac_c */
-static s32 daAtt_Create(fopAc_ac_c*) {
-    /* Nonmatching */
+static s32 daAtt_Create(fopAc_ac_c* pActor) {
+    att_class* i_this = (att_class*)pActor;
+    dCcD_SrcSph* test = (dCcD_SrcSph*)&dummy_2100;
+    fopAcM_SetupActor(i_this, att_class);
+
+    i_this->m0298[0x02B5 - 0x0298] = fopAcM_GetParam(i_this);
+
+    i_this->attention_info.distances[2] = 0x4;
+
+    if (i_this->m0298[0x02B5 - 0x0298] == 0x65) {
+        i_this->actor_status = i_this->actor_status | (0x1000 << 16);
+        i_this->mStts.Init(0xFF, 0xFF, i_this);
+        i_this->mSph.Set(*((dCcD_SrcSph*)((s32)test + (s32)0x30)));
+        i_this->mSph.SetStts(&i_this->mStts);
+    }
+    if (i_this->m0298[0x02B5 - 0x0298] < 0x0a) {
+        dummy_boss = 0;
+        i_this->mStts.Init(0xFF, 0xFF, i_this);
+        i_this->mCyl.Set(*((dCcD_SrcCyl*)((s32)test + (s32)0x70)));
+        i_this->mCyl.SetStts(&i_this->mStts);
+        i_this->mSph.Set(*((dCcD_SrcSph*)((s32)test + (s32)0xb4)));
+        i_this->mSph.SetStts(&i_this->mStts);
+    }
+
+    return 4;
 }
+
+static actor_method_class l_daAtt_Method = {
+    (process_method_func)daAtt_Create,
+    (process_method_func)daAtt_Delete,
+    (process_method_func)daAtt_Execute,
+    (process_method_func)daAtt_IsDelete,
+    (process_method_func)daAtt_Draw,
+};
+
+actor_process_profile_definition g_profile_ATT = {
+    fpcLy_CURRENT_e,
+    7,
+    fpcPi_CURRENT_e,
+    PROC_HITOBJ,
+    &g_fpcLf_Method.base,
+    sizeof(att_class),
+    0,
+    0,
+    &g_fopAc_Method.base,
+    0x00AB,
+    &l_daAtt_Method,
+    fopAcStts_UNK40000_e,
+    fopAc_ACTOR_e,
+    fopAc_CULLBOX_0_e,
+};
