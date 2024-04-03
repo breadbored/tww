@@ -103,9 +103,9 @@ static BOOL daAtt_Execute(att_class* i_this) {
     u32 sVar3 = 0;
     cXyz local_28 [2];
     if (i_this->m0298[0x02B5 - 0x0298] == 0x65) {
-        i_this->eyePos = i_this->current.pos;
+        // i_this->eyePos = i_this->current.pos;
 
-        i_this->attention_info.position = i_this->eyePos;
+        i_this->attention_info.position = i_this->eyePos = i_this->current.pos;
 
         // i_this->actor_status = i_this->actor_status & 0xFFFFFFFF; // clrrwi r0, 0, 0 ; ????
         fopAcM_OffStatus(i_this, 0);
@@ -117,9 +117,8 @@ static BOOL daAtt_Execute(att_class* i_this) {
         g_dComIfG_gameInfo.play.mCcS.Set(&i_this->mSph);
     }
     if (i_this->m0298[0x02B5 - 0x0298] == 0x64) {
-        i_this->eyePos = i_this->current.pos;
-
-        i_this->attention_info.position = i_this->eyePos;
+        // i_this->eyePos = i_this->current.pos;
+        i_this->attention_info.position = i_this->eyePos = i_this->current.pos;
     } else {
         dummy_boss = (bgn_class *)fpcEx_Search((fpcLyIt_JudgeFunc)boss_s_sub, i_this);
         if (dummy_boss == NULL) {
@@ -128,42 +127,42 @@ static BOOL daAtt_Execute(att_class* i_this) {
 
         /**
          * @brief What the fuck is this? An index, maybe?
-         * 
+         *
          */
-        u32 unk0 = i_this->m0298[0x02B5 - 0x0298];
+        u32 bossIndex = i_this->m0298[0x02B5 - 0x0298];
 
         if ((int)static_cast<signed char>(i_this->m0550[0])) {
             i_this->m0550[0]--;
         }
         if (
             !((int)static_cast<signed char>(i_this->m0550[0]))
-        && 
-            i_this->mCyl.ChkTgHit() || i_this->mSph.ChkTgHit()
+        &&
+            (i_this->mCyl.ChkTgHit() || i_this->mSph.ChkTgHit())
         ) {
             i_this->m0550[0] = 10;
-            unk0 = (u32)dummy_boss + 65536UL;
-            iVar1 = unk0 * 0x30c;
-            *(u8 *)((u32)unk0 + (unk0 * 0x30c) + 0xadb0) = *(u8 *)((u32)unk0 + (unk0 * 0x30c) + 0xadb0) - 1;
-            if (*(u8 *)((u32)dummy_boss + (unk0 * 0x30c) + 0xadb0) < '\x01') {
-                *(u8 *)((u32)dummy_boss + (unk0 * 0x30c) + 0xad78) = 1;
-                *(s32 *)((u32)dummy_boss + (unk0 * 0x30c) + 0xadac) = 0x45bb8000;
+            bossIndex = (u32)dummy_boss + 65536UL;
+            iVar1 = bossIndex * 0x30c;
+            *(u8 *)((u32)bossIndex + (bossIndex * 0x30c) + 0xadb0) = *(u8 *)((u32)bossIndex + (bossIndex * 0x30c) + 0xadb0) - 1;
+            if (*(u8 *)((u32)dummy_boss + (bossIndex * 0x30c) + 0xadb0) < '\x01') {
+                *(u8 *)((u32)dummy_boss + (bossIndex * 0x30c) + 0xad78) = 1;
+                *(s32 *)((u32)dummy_boss + (bossIndex * 0x30c) + 0xadac) = 0x45bb8000;
                 sVar3 = dComIfGp_getReverb(i_this->current.roomNo);
                 mDoAud_seStart(
                     JA_SE_LK_W_WEP_HIT
                 );
-                if ((unk0 < 2) && (*(u8 *)((int)dummy_boss + (1 - unk0) * 0x30c + 0xad78) != '\0')) {
+                if ((bossIndex < 2) && (*(u8 *)((int)dummy_boss + (1 - bossIndex) * 0x30c + 0xad78) != '\0')) {
                     *(s32 *)((int)dummy_boss + 0xc7b0) = 600;
                 }
             } else {
-                *(s32 *)((int)dummy_boss + (unk0 * 0x30c) + 0xada8) = 0xf;
+                *(s32 *)((int)dummy_boss + (bossIndex * 0x30c) + 0xada8) = 0xf;
                 sVar3 = dComIfGp_getReverb(i_this->current.roomNo);
                 mDoAud_seStart(
                     JA_SE_CM_BGN_D_STRING_PLINK
                 );
             }
         }
-        
-        cXyz *puVar2 = (cXyz *)((int)dummy_boss + unk0 * 0xc + 0xc33c);
+
+        cXyz *puVar2 = (cXyz *)((int)dummy_boss + bossIndex * 0xc + 0xc33c);
         i_this->current.pos.x = puVar2->x;
         i_this->current.pos.y = puVar2->y;
         i_this->current.pos.z = puVar2->z;
@@ -174,26 +173,26 @@ static BOOL daAtt_Execute(att_class* i_this) {
             (
                 (
                     i_this->m0298[0x02B5 - 0x0298] == '\0'
-                ) 
+                )
             ||
                 (
                     (
                         (
-                            *(short *)((int)dummy_boss + 0xc748) == 0 
-                        && 
+                            *(short *)((int)dummy_boss + 0xc748) == 0
+                        &&
                             (*(short *)((int)dummy_boss + 0xc74c) == 0)
-                        ) 
+                        )
                     &&
-                        (unk0 == 7)
+                        (bossIndex == 7)
                     )
                 )
             )
         ||
             (
                 (
-                    *(u8 *)((int)dummy_boss + unk0 * 0x30c + 0xad78) != '\0' 
+                    *(u8 *)((int)dummy_boss + bossIndex * 0x30c + 0xad78) != '\0'
                 ||
-                    (*(float *)((int)dummy_boss + unk0 * 0x30c + 0xad94) >= 1.0)
+                    (*(float *)((int)dummy_boss + bossIndex * 0x30c + 0xad94) >= 1.0)
                 )
             )
         ) {
