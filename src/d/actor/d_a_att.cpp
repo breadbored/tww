@@ -4,11 +4,11 @@
 //
 
 #include "d/actor/d_a_att.h"
+#include "d/actor/d_a_bgn.h"
+#include "d/d_com_inf_game.h"
 #include "d/d_procname.h"
 #include "dolphin/types.h"
 #include "f_op/f_op_actor_mng.h"
-#include "d/d_com_inf_game.h"
-#include "d/actor/d_a_bgn.h"
 
 static bgn_class* dummy_boss;
 static u8 dummy_4061[0xC];
@@ -20,32 +20,34 @@ static Vec dummy_2080 = {1.0f, 1.0f, 1.0f};
 static u8 dummy_1811[] = {0x02, 0x00, 0x02, 0x01};
 
 static dCcD_SrcSph bm_sph_src = {
-        // dCcD_SrcGObjInf
-        {
-            /* Flags             */ 0,
-            /* SrcObjAt  Type    */ AT_TYPE_WATER,
-            /* SrcObjAt  Atp     */ 0,
-            /* SrcObjAt  SPrm    */ AT_SPRM_SET | AT_SPRM_VS_ENEMY | AT_SPRM_VS_OTHER,
-            /* SrcObjTg  Type    */ 0,
-            /* SrcObjTg  SPrm    */ TG_SPRM_SET | TG_SPRM_IS_ENEMY,
-            /* SrcObjCo  SPrm    */ 0,
-            /* SrcGObjAt Se      */ 0,
-            /* SrcGObjAt HitMark */ 0,
-            /* SrcGObjAt Spl     */ 0,
-            /* SrcGObjAt Mtrl    */ 0,
-            /* SrcGObjAt SPrm    */ 0,
-            /* SrcGObjTg Se      */ 0,
-            /* SrcGObjTg HitMark */ 0,
-            /* SrcGObjTg Spl     */ 0,
-            /* SrcGObjTg Mtrl    */ 0,
-            /* SrcGObjCo SPrm    */ 0,
-        },
-        // cM3dGSphS
-        {
-            /* Center */ 0.0f, 0.0f, 0.0f,
-            /* Radius */ 100.0f,
-        },
-    };
+    // dCcD_SrcGObjInf
+    {
+        /* Flags             */ 0,
+        /* SrcObjAt  Type    */ AT_TYPE_WATER,
+        /* SrcObjAt  Atp     */ 0,
+        /* SrcObjAt  SPrm    */ AT_SPRM_SET | AT_SPRM_VS_ENEMY | AT_SPRM_VS_OTHER,
+        /* SrcObjTg  Type    */ 0,
+        /* SrcObjTg  SPrm    */ TG_SPRM_SET | TG_SPRM_IS_ENEMY,
+        /* SrcObjCo  SPrm    */ 0,
+        /* SrcGObjAt Se      */ 0,
+        /* SrcGObjAt HitMark */ 0,
+        /* SrcGObjAt Spl     */ 0,
+        /* SrcGObjAt Mtrl    */ 0,
+        /* SrcGObjAt SPrm    */ 0,
+        /* SrcGObjTg Se      */ 0,
+        /* SrcGObjTg HitMark */ 0,
+        /* SrcGObjTg Spl     */ 0,
+        /* SrcGObjTg Mtrl    */ 0,
+        /* SrcGObjCo SPrm    */ 0,
+    },
+    // cM3dGSphS
+    {
+        /* Center */ 0.0f,
+        0.0f,
+        0.0f,
+        /* Radius */ 100.0f,
+    },
+};
 
 static dCcD_SrcCyl cc_cyl_src = {
     // dCcD_SrcGObjInf
@@ -71,16 +73,17 @@ static dCcD_SrcCyl cc_cyl_src = {
     },
     // cM3dGCylS
     {
-        /* Center */ 0.0f, 0.0f, 0.0f,
+        /* Center */ 0.0f,
+        0.0f,
+        0.0f,
         /* Radius */ 250.0f,
         /* Height */ 400.0f,
     },
 };
 
 static const u8 dummy_4131[] = {
-    0x45, 0xBB, 0x80, 0x00, 0x3F, 0x80, 0x00, 0x00,
-    0xBF, 0x80, 0x00, 0x00, 0x43, 0x48, 0x00, 0x00,
-    0x44, 0x7A, 0x00, 0x00, 0xC6, 0xEA, 0x60, 0x00,
+    0x45, 0xBB, 0x80, 0x00, 0x3F, 0x80, 0x00, 0x00, 0xBF, 0x80, 0x00, 0x00,
+    0x43, 0x48, 0x00, 0x00, 0x44, 0x7A, 0x00, 0x00, 0xC6, 0xEA, 0x60, 0x00,
 };
 
 /* 000000EC-000000F4       .text daAtt_Draw__FP9att_class */
@@ -101,7 +104,7 @@ fopAc_ac_c* boss_s_sub(void* pActor, void*) {
 static BOOL daAtt_Execute(att_class* i_this) {
     u32 iVar1 = 0;
     u32 sVar3 = 0;
-    cXyz local_28 [2];
+    cXyz local_28[2];
     if (i_this->m0298[0x02B5 - 0x0298] == 0x65) {
         // i_this->eyePos = i_this->current.pos;
 
@@ -120,83 +123,59 @@ static BOOL daAtt_Execute(att_class* i_this) {
         // i_this->eyePos = i_this->current.pos;
         i_this->attention_info.position = i_this->eyePos = i_this->current.pos;
     } else {
-        dummy_boss = (bgn_class *)fpcEx_Search((fpcLyIt_JudgeFunc)boss_s_sub, i_this);
+        dummy_boss = (bgn_class*)fpcEx_Search((fpcLyIt_JudgeFunc)boss_s_sub, i_this);
         if (dummy_boss == NULL) {
             return 1;
         }
 
-        /**
-         * @brief What the fuck is this? An index, maybe?
-         *
-         */
-        u32 bossIndex = i_this->m0298[0x02B5 - 0x0298];
+        s32 bossIndex = i_this->m0298[0x02B5 - 0x0298];
 
         if ((int)static_cast<signed char>(i_this->m0550[0])) {
             i_this->m0550[0]--;
         }
-        if (
-            !((int)static_cast<signed char>(i_this->m0550[0]))
-        &&
-            (i_this->mCyl.ChkTgHit() || i_this->mSph.ChkTgHit())
-        ) {
+        
+        if (!((int)static_cast<signed char>(i_this->m0550[0])) &&
+            (i_this->mCyl.ChkTgHit() || i_this->mSph.ChkTgHit()))
+        {
             i_this->m0550[0] = 10;
-            bossIndex = (u32)dummy_boss + 65536UL;
-            iVar1 = bossIndex * 0x30c;
-            *(u8 *)((u32)bossIndex + (bossIndex * 0x30c) + 0xadb0) = *(u8 *)((u32)bossIndex + (bossIndex * 0x30c) + 0xadb0) - 1;
-            if (*(u8 *)((u32)dummy_boss + (bossIndex * 0x30c) + 0xadb0) < '\x01') {
-                *(u8 *)((u32)dummy_boss + (bossIndex * 0x30c) + 0xad78) = 1;
-                *(s32 *)((u32)dummy_boss + (bossIndex * 0x30c) + 0xadac) = 0x45bb8000;
+            bossIndex = ((s32)dummy_boss + 0x10000) * 0x30c;
+            s32 pSomething = bossIndex + (s32)dummy_boss;
+
+            s32 iVar = *(u8*)((s32)pSomething + 0xadb0);
+            iVar--;
+            *(u8*)((s32)pSomething + 0xadb0) = iVar;
+            
+            if (*(s8*)((s32)pSomething + 0xadb0) <= 0) {
+                *(u8*)((u32)dummy_boss + 0xad78) = 1;
+                *(s32*)((u32)dummy_boss + 0xadac) = 0x45bb8000;
                 sVar3 = dComIfGp_getReverb(i_this->current.roomNo);
-                mDoAud_seStart(
-                    JA_SE_LK_W_WEP_HIT
-                );
-                if ((bossIndex < 2) && (*(u8 *)((int)dummy_boss + (1 - bossIndex) * 0x30c + 0xad78) != '\0')) {
-                    *(s32 *)((int)dummy_boss + 0xc7b0) = 600;
+                mDoAud_seStart(JA_SE_LK_W_WEP_HIT);
+                if ((bossIndex < 2) &&
+                    (*(u8*)((int)dummy_boss + (1 - bossIndex) * 0x30c + 0xad78) != '\0'))
+                {
+                    *(s32*)((int)dummy_boss + 0xc7b0) = 600;
                 }
             } else {
-                *(s32 *)((int)dummy_boss + (bossIndex * 0x30c) + 0xada8) = 0xf;
+                *(s32*)((int)dummy_boss + 0xada8) = 0xf;
                 sVar3 = dComIfGp_getReverb(i_this->current.roomNo);
-                mDoAud_seStart(
-                    JA_SE_CM_BGN_D_STRING_PLINK
-                );
+                mDoAud_seStart(JA_SE_CM_BGN_D_STRING_PLINK);
             }
         }
 
-        cXyz *puVar2 = (cXyz *)((int)dummy_boss + bossIndex * 0xc + 0xc33c);
+        cXyz* puVar2 = (cXyz*)((int)dummy_boss + bossIndex * 0xc + 0xc33c);
         i_this->current.pos.x = puVar2->x;
         i_this->current.pos.y = puVar2->y;
         i_this->current.pos.z = puVar2->z;
         local_28[0].x = i_this->current.pos.x;
         local_28[0].y = i_this->current.pos.y;
         local_28[0].z = i_this->current.pos.z;
-        if (
-            (
-                (
-                    i_this->m0298[0x02B5 - 0x0298] == '\0'
-                )
-            ||
-                (
-                    (
-                        (
-                            *(short *)((int)dummy_boss + 0xc748) == 0
-                        &&
-                            (*(short *)((int)dummy_boss + 0xc74c) == 0)
-                        )
-                    &&
-                        (bossIndex == 7)
-                    )
-                )
-            )
-        ||
-            (
-                (
-                    *(u8 *)((int)dummy_boss + bossIndex * 0x30c + 0xad78) != '\0'
-                ||
-                    (*(float *)((int)dummy_boss + bossIndex * 0x30c + 0xad94) >= 1.0)
-                )
-            )
-        ) {
-
+        if (((i_this->m0298[0x02B5 - 0x0298] == '\0') ||
+             (((*(short*)((int)dummy_boss + 0xc748) == 0 &&
+                (*(short*)((int)dummy_boss + 0xc74c) == 0)) &&
+               (bossIndex == 7)))) ||
+            ((*(u8*)((int)dummy_boss + bossIndex * 0x30c + 0xad78) != '\0' ||
+              (*(float*)((int)dummy_boss + bossIndex * 0x30c + 0xad94) >= 1.0))))
+        {
             i_this->attention_info.flags = fopAc_Attn_LOCKON_ENEMY_e;
             i_this->mCyl.SetR(200.0);
             i_this->mCyl.SetC(local_28[0]);
@@ -209,14 +188,13 @@ static BOOL daAtt_Execute(att_class* i_this) {
             i_this->attention_info.position.y = local_28[0].y;
             i_this->attention_info.position.z = local_28[0].z;
 
-        }
-        else {
+        } else {
             fopAcM_OffStatus(i_this, 0);
             // *(u32 *)((int)i_this + 0x1c4) = *(u32 *)((int)i_this + 0x1c4);
 
             i_this->attention_info.flags = 0;
-            i_this->mCyl.SetC(*((cXyz *)dummy_non_pos));
-            i_this->mSph.SetC(*((cXyz *)&dummy_non_pos));
+            i_this->mCyl.SetC(*((cXyz*)dummy_non_pos));
+            i_this->mSph.SetC(*((cXyz*)&dummy_non_pos));
         }
         g_dComIfG_gameInfo.play.mCcS.Set(&i_this->mCyl);
         g_dComIfG_gameInfo.play.mCcS.Set(&i_this->mSph);
@@ -263,10 +241,8 @@ static s32 daAtt_Create(fopAc_ac_c* pActor) {
 }
 
 static actor_method_class l_daAtt_Method = {
-    (process_method_func)daAtt_Create,
-    (process_method_func)daAtt_Delete,
-    (process_method_func)daAtt_Execute,
-    (process_method_func)daAtt_IsDelete,
+    (process_method_func)daAtt_Create,  (process_method_func)daAtt_Delete,
+    (process_method_func)daAtt_Execute, (process_method_func)daAtt_IsDelete,
     (process_method_func)daAtt_Draw,
 };
 

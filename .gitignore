@@ -12,3 +12,4 @@ tools/mwcc_compiler
 /*.txt
 ctx.c
 compile_commands.json
+.DS_Store
