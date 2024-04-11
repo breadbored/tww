@@ -1,6 +1,6 @@
 /**
  * d_a_npc_md.cpp
- * Player - Medli / リト族（メドリ） (Ritozoku (Medli))
+ * Player - Medli
  */
 
 #include "d/actor/d_a_npc_md.h"
@@ -454,7 +454,6 @@ s32 daNpc_Md_c::create() {
                 s16 angle = dComIfGs_getPlayerPriestRotate();
                 cXyz& pos = dComIfGs_getPlayerPriestPos();
                 dComIfGs_setRestartOption(&pos, angle, roomNo, 2);
-                dComIfGs_setPlayerPriest(2, pos, angle, roomNo);
             }
             checkRestart(2);
         }
@@ -462,7 +461,7 @@ s32 daNpc_Md_c::create() {
         fopAcM_SetMtx(this, mpMorf->getModel()->getBaseTRMtx());
         
         if (l_HIO.mChildID < 0) {
-            l_HIO.mChildID = mDoHIO_root.mDoHIO_createChild("リト族（メドリ）", &l_HIO);
+            l_HIO.mChildID = mDoHIO_root.mDoHIO_createChild("リト族（メドリ）", &l_HIO); // "Rito (Medli)" (Ritozoku (Medli))
             l_HIO.mpActor = this;
         }
         
@@ -1136,7 +1135,7 @@ BOOL daNpc_Md_c::lightHitCheck() {
         
         if (mCps.ChkAtHit()) {
             fopAc_ac_c* hitActor = mCps.GetAtHitAc();
-            if (fopAcM_checkStatus(this, fopAcStts_CARRY_e) && !isNoCarryAction()) {
+            if (fopAcM_CheckStatus(this, fopAcStts_CARRY_e) && !isNoCarryAction()) {
                 if (hitActor != dComIfGp_getLinkPlayer() && m3058.getEmitter() == NULL) {
                     dComIfGp_particle_set(0x8232, &current.pos, NULL, NULL, 0xFF, &m3058);
                 }
@@ -1292,7 +1291,7 @@ BOOL daNpc_Md_c::harpWaitNpcAction(void*) {
     /* Nonmatching */
 }
 
-static u32 l_msgId;
+static uint l_msgId;
 static msg_class* l_msg;
 
 /* 00004CFC-00004D40       .text XYTalkCheck__10daNpc_Md_cFv */
@@ -2056,10 +2055,10 @@ BOOL daNpc_Md_c::actionLookDown(int) {
 /* 0000CB8C-0000CC10       .text talk_init__10daNpc_Md_cFv */
 BOOL daNpc_Md_c::talk_init() {
     if (l_msgId == fpcM_ERROR_PROCESS_ID_e) {
-        if (mMsgId == 0x5AC) {
+        if (mMsgNo == 0x5AC) {
             l_msgId = fopMsgM_tactMessageSet();
         } else {
-            l_msgId = fopMsgM_messageSet(mMsgId, this);
+            l_msgId = fopMsgM_messageSet(mMsgNo, this);
         }
     } else {
         l_msg = fopMsgM_SearchByID(l_msgId);
@@ -2075,9 +2074,9 @@ BOOL daNpc_Md_c::talk(int r4) {
     u16 msgStatus = l_msg->mStatus;
     u8 msgAnmAtr = dComIfGp_getMesgAnimeAttrInfo();
     if (msgStatus == fopMsgStts_MSG_DISPLAYED_e) {
-        l_msg->mStatus = next_msgStatus(&mMsgId);
+        l_msg->mStatus = next_msgStatus(&mMsgNo);
         if (l_msg->mStatus == fopMsgStts_MSG_CONTINUES_e) {
-            fopMsgM_messageSet(mMsgId);
+            fopMsgM_messageSet(mMsgNo);
             m313A = 0;
         }
     } else if (msgStatus == fopMsgStts_UNK15_e) {
@@ -2093,7 +2092,7 @@ BOOL daNpc_Md_c::talk(int r4) {
             }
         }
     } else if (msgStatus == fopMsgStts_MSG_TYPING_e) {
-        if (m313A == 0 && !fopAcM_checkCarryNow(this) && !isShipRide() && mMsgId != 0x05AC) {
+        if (m313A == 0 && !fopAcM_checkCarryNow(this) && !isShipRide() && mMsgNo != 0x05AC) {
             int anmType = getAnmType(msgAnmAtr);
             if (anmType >= 0) {
                 setAnm(anmType);
@@ -2105,7 +2104,7 @@ BOOL daNpc_Md_c::talk(int r4) {
         return TRUE;
     }
     
-    if (!fopAcM_checkCarryNow(this) && !isShipRide() && mMsgId != 0x05AC) {
+    if (!fopAcM_checkCarryNow(this) && !isShipRide() && mMsgNo != 0x05AC) {
         if (m313A == 1 && msgAnmAtr == 0x14 && m312A != 0) {
             setAnm(0x1B);
             m313A = 1;
@@ -2964,7 +2963,7 @@ BOOL daNpc_Md_c::draw() {
         dComIfGd_getXluList()->entryImm(&m0B70, 0x1F);
     }
     
-    if (!isShipRide() && !fopAcM_checkStatus(this, fopAcStts_CARRY_e) && cLib_checkBit(m30F0, 0x20000UL)) {
+    if (!isShipRide() && !fopAcM_CheckStatus(this, fopAcStts_CARRY_e) && cLib_checkBit(m30F0, 0x20000UL)) {
         cXyz shadowPos(current.pos.x, current.pos.y + 150.0f, current.pos.z);
         mShadowId = dComIfGd_setShadow(
             mShadowId, 0, mpMorf->getModel(), &shadowPos, 800.0f, 20.0f,

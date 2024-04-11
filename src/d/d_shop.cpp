@@ -1172,7 +1172,7 @@ void ShopItems_c::SoldOutItem(int idx) {
     if (item) {
         item->hide();
     }
-    m28[idx] = 1;
+    mItemIsSoldOut[idx] = true;
 }
 
 /* 8005FF7C-8005FF98       .text getItemNo__11ShopItems_cFi */
@@ -1184,7 +1184,7 @@ u8 ShopItems_c::getItemNo(int idx) {
 void ShopItems_c::showItem() {
     for (int i = 0; i < mNumItems; i++) {
         daShopItem_c* item = (daShopItem_c*)fopAcM_SearchByID(mItemActorProcessIds[i]);
-        if (item && m28[i] != 1) {
+        if (item && mItemIsSoldOut[i] != true) {
             item->show();
             item->current.pos = item->home.pos;
             item->getRotateP()->y = item->home.angle.y;
@@ -1200,12 +1200,12 @@ u8 ShopItems_c::getSelectItemNo() {
 
 /* 80060078-80060090       .text getSelectItemShowMsg__11ShopItems_cFv */
 u32 ShopItems_c::getSelectItemShowMsg() {
-    return mpItemSetList[mSelectedItemIdx]->mShowMsgID;
+    return mpItemSetList[mSelectedItemIdx]->mShowMsgNo;
 }
 
 /* 80060090-800600A8       .text getSelectItemBuyMsg__11ShopItems_cFv */
 u32 ShopItems_c::getSelectItemBuyMsg() {
-    return mpItemSetList[mSelectedItemIdx]->mBuyMsgID;
+    return mpItemSetList[mSelectedItemIdx]->mBuyMsgNo;
 }
 
 /* 800600A8-80060138       .text dShop_get_next_select__FiP11ShopItems_c */
@@ -1255,7 +1255,7 @@ BOOL ShopItems_c::isSoldOutItemAll() {
 }
 
 /* 8006019C-8006036C       .text dShop_now_triggercheck__FP9msg_classP9STControlP11ShopItems_cPUlPFPv_UlPv */
-BOOL dShop_now_triggercheck(msg_class* msg, STControl* stickControl, ShopItems_c* shopItems, u32* pMsgID, dShop_DefaultMsgCallback defaultMsgCb, void* defaultMsgArg) {
+BOOL dShop_now_triggercheck(msg_class* msg, STControl* stickControl, ShopItems_c* shopItems, u32* pMsgNo, dShop_DefaultMsgCallback defaultMsgCb, void* defaultMsgArg) {
     int itemDataIdx;
     int selectedItemIdx;
     __shop_items_set_data** itemSetList;
@@ -1291,20 +1291,20 @@ BOOL dShop_now_triggercheck(msg_class* msg, STControl* stickControl, ShopItems_c
     if (idxChanged) {
         if (nextIdx < 0) {
             if (defaultMsgCb == NULL) {
-                *pMsgID = default_select_msg[itemDataIdx];
+                *pMsgNo = default_select_msg[itemDataIdx];
             } else {
-                *pMsgID = defaultMsgCb(defaultMsgArg);
+                *pMsgNo = defaultMsgCb(defaultMsgArg);
             }
         } else {
-            if (shopItems->m28[nextIdx] == 1) {
-                *pMsgID = itemSetList[nextIdx]->m0C;
+            if (shopItems->isSoldOutItem(nextIdx)) {
+                *pMsgNo = itemSetList[nextIdx]->m0C;
             } else {
-                *pMsgID = itemSetList[nextIdx]->mShowMsgID;
+                *pMsgNo = itemSetList[nextIdx]->mShowMsgNo;
             }
         }
         
         msg->mStatus = fopMsgStts_MSG_CONTINUES_e;
-        fopMsgM_messageSet(*pMsgID);
+        fopMsgM_messageSet(*pMsgNo);
         fopMsgM_messageSendOn();
         shopItems->mSelectedItemIdx = nextIdx;
     }
@@ -1344,7 +1344,7 @@ u8 dShop_BoughtErrorStatus(ShopItems_c* shopItems, int param_2, int param_3) {
     
     if (buyCond & Shop_BuyCond_MUST_OWN_ITEM_e) {
         if (itemData->mMustOwnItemNo == dItem_BOW_e) {
-            if (dComIfGs_getItem(0xC) == 0xFF) {
+            if (dComIfGs_getItem(0xC) == dItem_NONE_e) {
                 errorStatus |= Shop_BuyCond_MUST_OWN_ITEM_e;
             }
         } else {

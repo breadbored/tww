@@ -2238,12 +2238,36 @@ BOOL daPy_lk_c::procSubjectivity() {
 
 /* 80112BEC-80112C90       .text procCall_init__9daPy_lk_cFv */
 BOOL daPy_lk_c::procCall_init() {
-    /* Nonmatching */
+    commonProcInit(daPyProc_CALL_e);
+    mVelocity = 0.0f;
+    daPy_matAnm_c::offMabaFlg();
+    daPy_matAnm_c::setMabaTimer(1);
+    setSingleMoveAnime(ANM_YOBU, 1.0f, 0.0f, -1, daPy_HIO_basic_c0::m.field_0xC);
+    current.angle.y = shape_angle.y;
+    if (mHeldItemType == 0x101) {
+        deleteEquipItem(FALSE);
+    }
+    voiceStart(0x2A);
+    return TRUE;
 }
 
 /* 80112C90-80112D38       .text procCall__9daPy_lk_cFv */
 BOOL daPy_lk_c::procCall() {
-    /* Nonmatching */
+    if (dComIfGp_getCb1Player()) {
+        s16 targetAngle = cLib_targetAngleY(&current.pos, &dComIfGp_getCb1Player()->eyePos);
+        cLib_addCalcAngleS(&shape_angle.y, targetAngle, 2, 0x2000, 0x800);
+        current.angle.y = shape_angle.y;
+    }
+    
+    if (mFrameCtrlUnder[0].getRate() < 0.01f) {
+        if (dComIfGp_getCb1Player()) {
+            daPy_py_c* partner = (daPy_py_c*)dComIfGp_getCb1Player();
+            partner->onNpcCallCommand();
+        }
+        checkNextMode(0);
+    }
+    
+    return TRUE;
 }
 
 /* 80112D38-80112DF4       .text procControllWait_init__9daPy_lk_cFv */
@@ -4311,9 +4335,9 @@ static s32 daPy_Create(fopAc_ac_c* i_this) {
         phase_3,
         NULL,
     };
-    daPy_lk_c* player_link = (daPy_lk_c*)i_this;
+    daPy_lk_c* a_this = (daPy_lk_c*)i_this;
 
-    return dComLbG_PhaseHandler(player_link->getPhase(), (cPhs__Handler*)l_method, player_link);
+    return dComLbG_PhaseHandler(a_this->getPhase(), (cPhs__Handler*)l_method, a_this);
 }
 
 /* 80127BA0-80127CC0       .text setSeAnime__9daPy_lk_cFPC14daPy_anmHeap_cP12J3DFrameCtrl */

@@ -63,11 +63,11 @@ public:
     void setData(fopAc_ac_c*);
     void clearData();
 
-    u32 getID() const { return mID; }
+    uint getID() const { return mID; }
     fopAc_ac_c* getActor() { return mActor; }
 
 private:
-    /* 0x0 */ u32 mID;
+    /* 0x0 */ uint mID;
     /* 0x4 */ fopAc_ac_c* mActor;
 };  // Size: 0x8
 
@@ -1673,7 +1673,7 @@ public:
     void getShadowID() const {}
     void npcStartRestartRoom() {}
     void setDaiokutaEnd() {}
-    void setWhirlId(unsigned int) {}
+    void setWhirlId(uint) {}
     void decrementBombCnt() {
         if (mActivePlayerBombs != 0) {
             mActivePlayerBombs--;
@@ -1777,14 +1777,14 @@ public:
     virtual BOOL checkCutCharge() const { return mCurProc == daPyProc_CUT_TURN_MOVE_e; }
     virtual BOOL getBokoFlamePos(cXyz*);
     virtual BOOL checkTactWait() const { return mCurProc == daPyProc_TACT_WAIT_e; }
-    virtual void setTactZev(unsigned int, int, char*);
+    virtual void setTactZev(uint, int, char*);
     virtual void onDekuSpReturnFlg(u8 i_point);
     virtual BOOL checkComboCutTurn() const { return mCurProc == daPyProc_CUT_TURN_e && m3570 != 0; }
     virtual f32 getBaseAnimeFrameRate() { return mFrameCtrlUnder[UNDER_MOVE0_e].getRate(); }
     virtual f32 getBaseAnimeFrame() { return mFrameCtrlUnder[UNDER_MOVE0_e].getFrame(); }
-    virtual u32 getItemID() const { return mActorKeepEquip.getID(); }
-    virtual u32 getThrowBoomerangID() const { return mActorKeepThrow.getID(); }
-    virtual u32 getGrabActorID() const { return mActorKeepGrab.getID(); }
+    virtual uint getItemID() const { return mActorKeepEquip.getID(); }
+    virtual uint getThrowBoomerangID() const { return mActorKeepThrow.getID(); }
+    virtual uint getGrabActorID() const { return mActorKeepGrab.getID(); }
     virtual BOOL checkGrabBarrel() { return checkGrabBarrelSearch(1); }
     virtual u32 checkPlayerNoDraw() { return dComIfGp_checkCameraAttentionStatus(mCameraInfoIdx, 2) || checkNoResetFlg0(daPyFlg0_NO_DRAW); }
     virtual BOOL checkRopeTag() { return mActorKeepEquip.getActor() == NULL; }
@@ -1794,7 +1794,7 @@ public:
     virtual void onFrollCrashFlg(u32 param_1) { m3620 = param_1; onNoResetFlg0(daPyFlg0_UNK8); }
     virtual MtxP getModelJointMtx(u16 idx) { return mpCLModel->getAnmMtx(idx); }
     virtual f32 getOldSpeedY() { return mOldSpeed.y; }
-    virtual BOOL setHookshotCarryOffset(unsigned int, const cXyz*);
+    virtual BOOL setHookshotCarryOffset(uint, const cXyz*);
     virtual void cancelChangeTextureAnime() { resetDemoTextureAnime(); }
 
 public:
@@ -2085,7 +2085,7 @@ public:
     /* 0x3620 */ u32 m3620;
     /* 0x3624 */ int m3624;
     /* 0x3628 */ int m3628;
-    /* 0x362C */ unsigned int mTactZevPartnerPID;
+    /* 0x362C */ uint mTactZevPartnerPID;
     /* 0x3630 */ u32 m3630;
     /* 0x3634 */ int m3634;
     /* 0x3638 */ int mMsgId;

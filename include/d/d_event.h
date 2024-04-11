@@ -90,15 +90,15 @@ public:
     void remove();
     dStage_Event_dt_c* getStageEventDt();
     dStage_Event_dt_c* nextStageEventDt(void*);
-    u32 getPId(void*);
-    fopAc_ac_c* convPId(unsigned int);
+    uint getPId(void*);
+    fopAc_ac_c* convPId(uint);
     u8 getTactFreeMStick(int);
     u8 getTactFreeCStick(int);
     bool giveItemCut(u8);
 
     u8 getTalkXYBtn() { return mTalkButton; }
     bool chkTalkXY() { return mTalkButton == 1 || mTalkButton == 2 || mTalkButton == 3; }
-    void setPtI_Id(unsigned int id) { mPtItem = id; }
+    void setPtI_Id(uint id) { mPtItem = id; }
     void setPtI(void* actor) { mPtItem = getPId(actor); }
     fopAc_ac_c* getPtI() { return convPId(mPtItem); }
     void setGtItm(u8 itemNo) { mGetItemNo = itemNo; }
@@ -109,7 +109,7 @@ public:
     fopAc_ac_c* getPt1() { return convPId(mPt1); }
     void setPt2(void* i_actor) { mPt2 = getPId(i_actor); }
     fopAc_ac_c* getPt2() { return convPId(mPt2); }
-    u8 getPreItemNo() { return mItemNo; }
+    int getPreItemNo() { return mItemNo; }
     
     f32 getCullRate() { return mCullFarClipRatio; }
     void setCullRate(f32 ratio) { mCullFarClipRatio = ratio; }
@@ -135,10 +135,10 @@ public:
     /* 0xC1 */ s8 mFirstOrderIdx;
     /* 0xC2 */ u8 mMode;
     /* 0xC3 */ u8 mbEndProc;
-    /* 0xC4 */ u32 mPt1;
-    /* 0xC8 */ u32 mPt2;
-    /* 0xCC */ u32 mPtTalk;
-    /* 0xD0 */ u32 mPtItem;
+    /* 0xC4 */ uint mPt1;
+    /* 0xC8 */ uint mPt2;
+    /* 0xCC */ uint mPtTalk;
+    /* 0xD0 */ uint mPtItem;
     /* 0xD4 */ u8 mGetItemNo;
     /* 0xD5 */ u8 field_0xD5[0xD6 - 0xD5];
     /* 0xD6 */ s16 mHindFlag;

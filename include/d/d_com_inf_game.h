@@ -36,7 +36,9 @@ class camera_class;
 class J2DOrthoGraph;
 
 enum daPy__PlayerStatus0 {
+    daPyStts0_UNK1_e           = 0x00000001,
     daPyStts0_UNK10_e          = 0x00000010,
+    daPyStts0_UNK100_e         = 0x00000100,
     daPyStts0_BOW_AIM_e        = 0x00001000,
     daPyStts0_SWORD_SWING_e    = 0x00008000,
     daPyStts0_SHIP_RIDE_e      = 0x00010000,
@@ -44,6 +46,7 @@ enum daPy__PlayerStatus0 {
     daPyStts0_SWIM_e           = 0x00100000,
     daPyStts0_TELESCOPE_LOOK_e = 0x00200000,
     daPyStts0_BOOMERANG_WAIT_e = 0x00400000,
+    daPyStts0_UNK2000000_e     = 0x02000000,
     daPyStts0_CRAWL_e          = 0x08000000,
     daPyStts0_UNK20000000_e    = 0x20000000,
     daPyStts0_SPIN_ATTACK_e    = 0x40000000,
@@ -274,10 +277,15 @@ public:
         mpPlayer[idx] = (daPy_py_c*)player;
         mCurCamera[idx] = cam;
     }
+    
+    int getMessageRupee() { return mMessageRupee; }
 
     int getItemRupeeCount() { return mItemRupeeCount; }
     void setItemRupeeCount(s32 count) { mItemRupeeCount += count; }
     void setMessageCountNumber(s16 num) { mMsgCountNumber = num; }
+
+    void setMessageSetNumber(s16 num) { mMsgSetNumber = num; }
+    s16 getMessageSetNumber() { return mMsgSetNumber; }
 
     s16 getMiniGameRupee() { return mMiniGameRupee; }
     void setMiniGameRupee(s16 count) { mMiniGameRupee = count; }
@@ -346,10 +354,12 @@ public:
     void setItemKeyNumCount(s16 num) { mItemKeyNumCount += num; }
 
     void setItemBeastNumCount(int i_idx, s16 num) { mItemBeastNumCounts[i_idx] += num; }
+    s16 getItemBeastNumCount(int i_idx) { return mItemBeastNumCounts[i_idx]; }
 
     void setItemTimeCount(s32 time) { mAirMeter = time; }
     void setItemTimeMax(s32 time) { field_0x4928 = time; }
 
+    u8 checkMesgSendButton() { return mMesgSendButton; }
     u8 checkMesgCancelButton() { return mMesgCancelButton; }
 
     void setPlayerStatus(int param_0, int i, u32 flag) { mPlayerStatus[param_0][i] |= flag; }
@@ -372,6 +382,10 @@ public:
     void setRStatus(u8 status) { field_0x492d = status; }
     u8 getRStatusForce() { return field_0x4930; }
     void setRStatusForce(u8 status) { field_0x4930 = status; }
+    u8 getAStatusForce() { return field_0x4931; }
+    void setAStatusForce(u8 value) { field_0x4931 = value; }
+    u8 getDoStatusForce() { return field_0x4932; }
+    void setDoStatusForce(u8 value) { field_0x4932 = value; }
     u8 getPictureStatus() { return mPictureStatus; }
     void setPictureStatusOn() { mPictureStatus = 2; }
 
@@ -571,8 +585,8 @@ public:
     /* 0x48E8 */ s16 mItemBeastNumCounts[8];
     /* 0x48F8 */ u8 field_0x48F8[0x4918 - 0x48F8];
     /* 0x4918 */ u16 mMsgCountNumber;
-    /* 0x491A */ s16 field_0x491a;
-    /* 0x491C */ s16 field_0x491c;
+    /* 0x491A */ s16 mMsgSetNumber;
+    /* 0x491C */ s16 mMessageRupee;
     /* 0x491E */ s16 field_0x491e;
     /* 0x4920 */ s16 field_0x4920;
     /* 0x4922 */ s16 field_0x4922;
@@ -604,7 +618,7 @@ public:
     /* 0x4945 */ u8 field_0x4945;
     /* 0x4946 */ u8 field_0x4946;
     /* 0x4947 */ u8 field_0x4947;
-    /* 0x4948 */ u8 field_0x4948;
+    /* 0x4948 */ u8 mMesgSendButton;
     /* 0x4949 */ u8 mMesgCancelButton;
     /* 0x494A */ u8 field_0x494a[6];
     /* 0x4950 */ u8 mMelodyNum;
@@ -736,6 +750,10 @@ inline int dComIfGs_getRupee() {
     return g_dComIfG_gameInfo.save.getPlayer().getPlayerStatusA().getRupee();
 }
 
+inline int dComIfGp_getMessageRupee() {
+    return g_dComIfG_gameInfo.play.getMessageRupee();
+}
+
 inline void dComIfGs_setRupee(u16 rupee) {
     g_dComIfG_gameInfo.save.getPlayer().getPlayerStatusA().setRupee(rupee);
 }
@@ -850,7 +868,7 @@ inline void dComIfGs_setReserveItem(u8 i_itemNo) {
     g_dComIfG_gameInfo.save.getPlayer().getBagItem().setReserveItem(i_itemNo);
 }
 
-inline BOOL dComIfGs_isGetItemReserve(int i_no) {
+inline BOOL dComIfGs_isGetItemReserve(u8 i_no) {
     return g_dComIfG_gameInfo.save.getPlayer().getGetBagItem().isReserve(i_no);
 }
 
@@ -1032,6 +1050,7 @@ inline void dComIfGs_setRestartOption(s8 i_option) {
 
 inline void dComIfGs_setRestartOption(cXyz* i_pos, s16 i_angle, s8 i_roomNo, s8 i_option) {
     g_dComIfG_gameInfo.save.getRestart().setRestartOption(i_option, i_pos, i_angle, i_roomNo);
+    g_dComIfG_gameInfo.save.getPlayer().getPriest().set(i_option, *i_pos, i_angle, i_roomNo);
 }
 
 inline u32 dComIfGs_getRestartRoomParam() {
@@ -2117,6 +2136,14 @@ inline void dComIfGp_setItemRupeeCount(s32 count) {
     g_dComIfG_gameInfo.play.setItemRupeeCount(count);
 }
 
+inline s16 dComIfGp_getMessageSetNumber() {
+    return g_dComIfG_gameInfo.play.getMessageSetNumber();
+}
+
+inline void dComIfGp_setMessageSetNumber(s16 num) {
+    g_dComIfG_gameInfo.play.setMessageSetNumber(num);
+}
+
 inline f32 dComIfGp_getItemLifeCount() {
     return g_dComIfG_gameInfo.play.getItemLifeCount();
 }
@@ -2185,6 +2212,14 @@ inline void dComIfGp_setItemBeastNumCount(int i_idx, s16 num) {
     g_dComIfG_gameInfo.play.setItemBeastNumCount(i_idx, num);
 }
 
+inline s16 dComIfGp_getItemBeastNumCount(int i_idx) {
+    return g_dComIfG_gameInfo.play.getItemBeastNumCount(i_idx);
+}
+
+inline u8 dComIfGp_checkMesgSendButton() {
+    return g_dComIfG_gameInfo.play.checkMesgSendButton();
+}
+
 inline u8 dComIfGp_checkMesgCancelButton() {
     return g_dComIfG_gameInfo.play.checkMesgCancelButton();
 }
@@ -2211,6 +2246,13 @@ inline void dComIfGp_clearPlayerStatus0(int param_0, u32 flag) {
 
 inline void dComIfGp_clearPlayerStatus1(int param_0, u32 flag) {
     g_dComIfG_gameInfo.play.clearPlayerStatus(param_0, 1, flag);
+}
+
+inline void dComIfGp_setDoStatusForce(u8 value) {
+    g_dComIfG_gameInfo.play.setDoStatusForce(value);
+}
+inline void dComIfGp_setAStatusForce(u8 value) {
+    g_dComIfG_gameInfo.play.setAStatusForce(value);
 }
 
 /**
@@ -2440,7 +2482,7 @@ inline void dComIfGp_event_reset() {
     g_dComIfG_gameInfo.play.getEvent().reset();
 }
 
-inline u8 dComIfGp_event_getPreItemNo() {
+inline int dComIfGp_event_getPreItemNo() {
     return g_dComIfG_gameInfo.play.getEvent().getPreItemNo();
 }
 
@@ -2484,7 +2526,7 @@ inline void dComIfGp_event_setItemPartner(void* pt) {
     g_dComIfG_gameInfo.play.getEvent().setPtI(pt);
 }
 
-inline void dComIfGp_event_setItemPartnerId(unsigned int id) {
+inline void dComIfGp_event_setItemPartnerId(uint id) {
     g_dComIfG_gameInfo.play.getEvent().setPtI_Id(id);
 }
 

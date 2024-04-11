@@ -6,9 +6,9 @@
 
 typedef struct base_process_class base_process_class;
 
-scene_class* fopScnM_SearchByID(unsigned int id);
+scene_class* fopScnM_SearchByID(uint id);
 int fopScnM_ChangeReq(scene_class*, s16, s16, u16);
-unsigned int fopScnM_DeleteReq(scene_class*);
+uint fopScnM_DeleteReq(scene_class*);
 int fopScnM_CreateReq(s16, s16, u16, u32);
 u32 fopScnM_ReRequest(s16, u32);
 void fopScnM_Management(void);
@@ -24,7 +24,7 @@ inline layer_class * fpcM_Layer(const void* pProc) {
     return &((process_node_class*)pProc)->mLayer;
 }
 
-inline u32 fopScnM_GetID(void* proc) {
+inline uint fopScnM_GetID(void* proc) {
     return fpcM_GetID(proc);
 }
 

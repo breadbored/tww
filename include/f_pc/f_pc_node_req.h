@@ -17,7 +17,7 @@ typedef struct node_create_request_method_class {
 // needed to match struct copy
 typedef struct unk_process_node_class {
     process_node_class* mpNodeProc;
-    u32 mProcId;
+    uint mProcId;
 } unk_process_node_class;
 
 typedef struct node_create_request {
@@ -30,7 +30,7 @@ typedef struct node_create_request {
     s32 mRequestId;
     unk_process_node_class mNodeProc;
     layer_class* mpLayerClass;
-    u32 mCreatingID;
+    uint mCreatingID;
     s16 mProcName;
     void* mpUserData;
     s16 unk_0x60;
@@ -64,7 +64,7 @@ node_create_request* fpcNdRq_CreateNode(u32 pRequestSize, s16 param_2, void* par
 node_create_request*
 fpcNdRq_Request(u32 param_1, int param_2, process_node_class* param_3, s16 param_4,
                 void* param_5, node_create_request_method_class* pNodeCreateRequestMethodClass);
-s32 fpcNdRq_ReChangeNode(unsigned int pRequestId, s16 param_2, void* param_3);
-s32 fpcNdRq_ReRequest(unsigned int pRequestId, s16 param_2, void* param_3);
+s32 fpcNdRq_ReChangeNode(uint pRequestId, s16 param_2, void* param_3);
+s32 fpcNdRq_ReRequest(uint pRequestId, s16 param_2, void* param_3);
 
 #endif

@@ -141,7 +141,7 @@ s32 fopMsgM_setStageLayer(void* proc) {
 }
 
 /* 8002AED4-8002AEF4       .text fopMsgM_SearchByID__FUi */
-msg_class* fopMsgM_SearchByID(unsigned int pid) {
+msg_class* fopMsgM_SearchByID(uint pid) {
     return (msg_class*)fpcEx_SearchByID(pid);
 }
 
@@ -151,7 +151,7 @@ msg_class* fopMsgM_SearchByName(s16 proc_name) {
 }
 
 /* 8002AF24-8002AF44       .text fopMsgM_IsExecuting__FUi */
-BOOL fopMsgM_IsExecuting(unsigned int pid) {
+BOOL fopMsgM_IsExecuting(uint pid) {
     return fpcEx_IsExist(pid);
 }
 
@@ -166,14 +166,14 @@ void fopMsgM_Delete(void* i_this) {
 }
 
 /* 8002AF6C-8002B030       .text createAppend__FP10fopAc_ac_cP4cXyzPUlPUlUi */
-fopMsg_prm_class* createAppend(fopAc_ac_c* actor, cXyz* pos, u32* msg_id, u32* p4, unsigned int p5) {
+fopMsg_prm_class* createAppend(fopAc_ac_c* actor, cXyz* pos, u32* msg_no, u32* p4, uint p5) {
     fopMsg_prm_class* params = (fopMsg_prm_class*) cMl::memalignB(-4, sizeof(fopMsg_prm_class));
     if (params == NULL)
         return NULL;
 
     params->mpActor = actor;
-    if (msg_id != NULL)
-        params->mMsgID = *msg_id;
+    if (msg_no != NULL)
+        params->mMsgNo = *msg_no;
     if (p4 != NULL)
         params->field_0x14 = *p4;
 
@@ -190,12 +190,12 @@ fopMsg_prm_class* createAppend(fopAc_ac_c* actor, cXyz* pos, u32* msg_id, u32* p
 }
 
 /* 8002B030-8002B0CC       .text createMGameTermAppend__FssiiUi */
-void createMGameTermAppend(s16, s16, int, int, unsigned int) {
+void createMGameTermAppend(s16, s16, int, int, uint) {
     /* Nonmatching */
 }
 
 /* 8002B0CC-8002B1C8       .text createTimerAppend__FiUsUcUcffffUi */
-void createTimerAppend(int, u16, u8, u8, f32, f32, f32, f32, unsigned int) {
+void createTimerAppend(int, u16, u8, u8, f32, f32, f32, f32, uint) {
     /* Nonmatching */
 }
 
@@ -210,7 +210,7 @@ void fop_MGameTerm_create(s16, s16, s16, int, int, int (*)(void*)) {
 }
 
 /* 8002B2B0-8002B324       .text fop_Timer_create__FsUcUsUcUcffffPFPv_i */
-s32 fop_Timer_create(s16, u8, u16, u8, u8, f32, f32, f32, f32, int (*)(void*)) {
+uint fop_Timer_create(s16, u8, u16, u8, u8, f32, f32, f32, f32, int (*)(void*)) {
     /* Nonmatching */
 }
 
@@ -225,17 +225,17 @@ u32 fopMsgM_searchMessageNumber(u32) {
 }
 
 /* 8002B634-8002B778       .text fopMsgM_messageSet__FUlP10fopAc_ac_c */
-int fopMsgM_messageSet(u32, fopAc_ac_c*) {
+uint fopMsgM_messageSet(u32, fopAc_ac_c*) {
     /* Nonmatching */
 }
 
 /* 8002B778-8002B8A4       .text fopMsgM_messageSet__FUlP4cXyz */
-int fopMsgM_messageSet(u32, cXyz*) {
+uint fopMsgM_messageSet(u32, cXyz*) {
     /* Nonmatching */
 }
 
 /* 8002B8A4-8002B9C4       .text fopMsgM_messageSet__FUl */
-int fopMsgM_messageSet(u32) {
+uint fopMsgM_messageSet(u32) {
     /* Nonmatching */
 }
 

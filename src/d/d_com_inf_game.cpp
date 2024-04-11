@@ -91,8 +91,8 @@ void dComIfG_play_c::itemInit() {
     }
 
     mMsgCountNumber = 0;
-    field_0x491a = 0;
-    field_0x491c = 0;
+    mMsgSetNumber = 0;
+    mMessageRupee = 0;
     field_0x491e = 0;
     field_0x4920 = 0;
     field_0x4922 = 0;
@@ -134,7 +134,7 @@ void dComIfG_play_c::itemInit() {
     field_0x4945 = 0;
     field_0x4946 = 0;
     field_0x4947 = 0;
-    field_0x4948 = 0;
+    mMesgSendButton = 0;
     mMesgCancelButton = 0;
 
     for (int i = 0; i < 6; i++) {
@@ -945,12 +945,12 @@ u8 dComIfGs_checkGetItemNum(u8 i_itemNo) {
         }
         break;
     case dItem_BOW_e:
-        if (dComIfGs_getItem(12)) {
+        if (dComIfGs_getItem(12) != dItem_HEART_e) { // Bug?
             get_item = dComIfGs_getArrowNum();
         }
         break;
     case BOMB_BAG:
-        if (dComIfGs_getItem(13)) {
+        if (dComIfGs_getItem(13) != dItem_HEART_e) { // Bug?
             get_item = dComIfGs_getBombNum();
         }
         break;

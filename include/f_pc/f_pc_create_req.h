@@ -23,13 +23,13 @@ typedef struct create_request {
     process_method_tag_class mMtdTg;
     create_request_method_class* mpCtRqMtd;
     void* mpUnk1;
-    s32 mBsPcId;
+    uint mBsPcId;
     struct base_process_class* mpRes;
     layer_class* mpLayer;
 } create_request;  // Size: 0x48
 
-bool fpcCtRq_isCreatingByID(create_tag* pTag, unsigned int* pId);
-BOOL fpcCtRq_IsCreatingByID(unsigned int id);
+bool fpcCtRq_isCreatingByID(create_tag* pTag, uint* pId);
+BOOL fpcCtRq_IsCreatingByID(uint id);
 void fpcCtRq_CreateQTo(create_request* pReq);
 void fpcCtRq_ToCreateQ(create_request* pReq);
 BOOL fpcCtRq_Delete(create_request* pReq);

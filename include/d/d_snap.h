@@ -82,7 +82,7 @@ enum {
     /* 0x4A */ DSNAP_TYPE_UNK4A,
     /* 0x4B */ DSNAP_TYPE_UNK4B,
     /* 0x4C */ DSNAP_TYPE_UNK4C,
-    /* 0x4D */ DSNAP_TYPE_UNK4D,
+    /* 0x4D */ DSNAP_TYPE_JI1,
     /* 0x4E */ DSNAP_TYPE_UNK4E,
     /* 0x4F */ DSNAP_TYPE_UNK4F,
     /* 0x50 */ DSNAP_TYPE_UNK50,
@@ -133,7 +133,7 @@ enum {
     /* 0x7D */ DSNAP_TYPE_UNK7D,
     /* 0x7E */ DSNAP_TYPE_UNK7E,
     /* 0x7F */ DSNAP_TYPE_UNK7F,
-    /* 0x80 */ DSNAP_TYPE_UNK80,
+    /* 0x80 */ DSNAP_TYPE_BS,
     /* 0x81 */ DSNAP_TYPE_UNK81,
     /* 0x82 */ DSNAP_TYPE_UNK82,
     /* 0x83 */ DSNAP_TYPE_UNK83,
@@ -175,7 +175,7 @@ enum {
     /* 0xA7 */ DSNAP_TYPE_UNKA7,
     /* 0xA8 */ DSNAP_TYPE_UNKA8,
     /* 0xA9 */ DSNAP_TYPE_UNKA9,
-    /* 0xAA */ DSNAP_TYPE_UNKAA,
+    /* 0xAA */ DSNAP_TYPE_BK,
     /* 0xAB */ DSNAP_TYPE_UNKAB,
     /* 0xAC */ DSNAP_TYPE_UNKAC,
     /* 0xAD */ DSNAP_TYPE_UNKAD,
@@ -221,7 +221,7 @@ public:
     /* 0x00 */ cXyz mCenter;
     /* 0x0C */ f32 mRadius;
     /* 0x10 */ f32 mHeight;
-    /* 0x14 */ u32 mActorPID;
+    /* 0x14 */ uint mActorPID;
     /* 0x18 */ u8 mPhoto;
     /* 0x19 */ u8 field_0x19;
     /* 0x1A */ u8 field_0x1a;

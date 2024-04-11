@@ -127,7 +127,7 @@ static BOOL daAM2_Draw(am2_class* i_this) {
     i_this->mpBrkAnm->remove(model->getModelData());
     i_this->mpBtkAnm->remove(model->getModelData());
 
-    if (!fopAcM_checkStatus(i_this, fopAcStts_CARRY_e)) {
+    if (!fopAcM_CheckStatus(i_this, fopAcStts_CARRY_e)) {
         dComIfGd_setSimpleShadow2(
             &i_this->current.pos, i_this->mAcch.GetGroundH(), 50.0f, i_this->mAcch.m_gnd,
             0, 1.0f, dDlst_shadowControl_c::getSimpleTex()
@@ -684,7 +684,7 @@ static void action_mahi(am2_class* i_this) {
                 fopAcM_seStart(actor, JA_SE_CM_AM2_JUMP, 0);
                 i_this->mCountUpTimers[1] = 0;
             }
-            if (fopAcM_checkStatus(actor, fopAcStts_CARRY_e)) {
+            if (fopAcM_CheckStatus(actor, fopAcStts_CARRY_e)) {
                 i_this->mAcchRadius = 40.0f + g_regHIO.mChild[8].mFloatRegs[10];
                 i_this->mbMadeWaterSplash = false;
                 i_this->mRippleCb.end();
@@ -708,7 +708,7 @@ static void action_mahi(am2_class* i_this) {
         if (i_this->mPickedUpYPos + 10.0f <= actor->current.pos.y) {
             cLib_addCalcAngleS2(&actor->shape_angle.y, actor->current.angle.y, 1, 0x1000);
         }
-        if (!fopAcM_checkStatus(actor, fopAcStts_CARRY_e)) {
+        if (!fopAcM_CheckStatus(actor, fopAcStts_CARRY_e)) {
             i_this->mAcchRadius = 40.0f + g_regHIO.mChild[8].mFloatRegs[10];
             i_this->mBodyCyl.OnCoSetBit();
             if (actor->speedF > 0.0f) {
@@ -807,7 +807,7 @@ static void action_mahi(am2_class* i_this) {
             i_this->mAction = ACTION_DOUSA;
             i_this->mState = 0;
             
-            if (fopAcM_checkStatus(actor, fopAcStts_CARRY_e)) {
+            if (fopAcM_CheckStatus(actor, fopAcStts_CARRY_e)) {
                 fopAcM_cancelCarryNow(actor);
                 actor->attention_info.flags &= ~fopAc_Attn_ACTION_CARRY_e;
                 actor->gravity = -4.0f;
@@ -827,7 +827,7 @@ static void action_mahi(am2_class* i_this) {
             }
             
             if (i_this->mCountDownTimers[3] == 1) {
-                if (fopAcM_checkStatus(actor, fopAcStts_CARRY_e)) {
+                if (fopAcM_CheckStatus(actor, fopAcStts_CARRY_e)) {
                     fopAcM_cancelCarryNow(actor);
                     actor->attention_info.flags &= ~fopAc_Attn_ACTION_CARRY_e;
                 }
@@ -840,7 +840,7 @@ static void action_mahi(am2_class* i_this) {
         }
     }
     
-    if (fopAcM_checkStatus(actor, fopAcStts_CARRY_e) || i_this->mState == 0xF || !week_atari_check(i_this)) {
+    if (fopAcM_CheckStatus(actor, fopAcStts_CARRY_e) || i_this->mState == 0xF || !week_atari_check(i_this)) {
         body_atari_check(i_this);
     }
 }
@@ -1313,7 +1313,7 @@ static s32 daAM2_Create(fopAc_ac_c* i_actor) {
         i_this->stealItemLeft = 3;
         i_this->model = i_this->mpMorf->getModel();
         
-        fopAcM_SetMtx(i_this, i_this->mpMorf->mpModel->getBaseTRMtx());
+        fopAcM_SetMtx(i_this, i_this->mpMorf->getModel()->getBaseTRMtx());
         fopAcM_setCullSizeBox(i_this, -50.0f, 0.0f, -20.0f, 60.0f, 180.0f, 60.0f);
 
         i_this->attention_info.flags = 0;

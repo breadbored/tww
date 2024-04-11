@@ -1249,7 +1249,7 @@ int phase_1(dScnPly_ply_c* i_this) {
         delete l_lkDemoAnmCommand;
     }
 
-    u32 id = fopScnM_GetID(i_this);
+    uint id = fopScnM_GetID(i_this);
     dStage_roomControl_c::setProcID(id);
 
     dComIfGp_setStartStage(dComIfGp_getNextStartStage());
@@ -1326,8 +1326,8 @@ s32 phase_4(dScnPly_ply_c* i_this) {
     dStage_Create();
     mDoGph_gInf_c::setTickRate((OS_BUS_CLOCK / 4) / 30);
 
-    g_darkHIO.mChildID = mDoHIO_root.mDoHIO_createChild("暗闇スポット", &g_darkHIO);
-    g_envHIO.mChildID = mDoHIO_root.mDoHIO_createChild("描画設定", &g_envHIO);
+    g_darkHIO.mChildID = mDoHIO_root.mDoHIO_createChild("暗闇スポット", &g_darkHIO); // "Darkness Spot"
+    g_envHIO.mChildID = mDoHIO_root.mDoHIO_createChild("描画設定", &g_envHIO); // "Draw Settings"
     g_msgDHIO.mChildID = mDoHIO_root.mDoHIO_createChild("Message Data", &g_msgDHIO);
 
     new(&dComIfGp_getAttention()) dAttention_c(dComIfGp_getPlayer(0), NULL);

@@ -34,7 +34,7 @@ public:
     /* 0x02D8 */ J3DModel* m02D8;
     /* 0x02DC */ u8 m02DC;
     /* 0x02DD */ u8 m02DD;
-    /* 0x02DE */ u8 m02DE;
+    /* 0x02DE */ s8 m02DE;
     /* 0x02DF */ u8 m02DF[0x02E0 - 0x02DF];
     /* 0x02E0 */ u32 mShadowId;
     /* 0x02E4 */ u8 m02E4[0x02E8 - 0x02E4];
@@ -55,7 +55,8 @@ public:
     /* 0x0318 */ u8 m0318;
     /* 0x031C */ f32 m031C;
     /* 0x0320 */ cXyz m0320;
-    /* 0x032C */ u8 m032C[0x0332 - 0x032C];
+    /* 0x032C */ u8 m032C[0x0330 - 0x032C];
+    /* 0x0330 */ s16 m0330;
     /* 0x0332 */ s16 m0332;
     /* 0x0334 */ s16 m0334;
     /* 0x0336 */ s16 m0336;
@@ -72,7 +73,13 @@ public:
     /* 0x0B34 */ int m0B34;
     /* 0x0B38 */ u8 m0B38[0x0B44 - 0x0B38];
     /* 0x0B44 */ cXyz m0B44[2];
-    /* 0x0B5C */ u8 m0B5C[0x0B78 - 0x0B5C];
+    /* 0x0B5C */ int m0B5C;
+    /* 0x0B60 */ int m0B60;
+    /* 0x0B64 */ f32 m0B64;
+    /* 0x0B68 */ f32 m0B68;
+    /* 0x0B6C */ f32 m0B6C;
+    /* 0x0B70 */ f32 m0B70;
+    /* 0x0B74 */ f32 m0B74;
     /* 0x0B78 */ s16 m0B78;
     /* 0x0B7A */ s8 m0B7A;
     /* 0x0B7B */ s8 m0B7B;
@@ -84,7 +91,9 @@ public:
     /* 0x1040 */ dCcD_Sph m1040;
     /* 0x116C */ cXyz m116C;
     /* 0x1178 */ cXyz m1178;
-    /* 0x1184 */ u8 m1184[0x11A8 - 0x1184];
+    /* 0x1184 */ u8 m1184[0x1190 - 0x1184];
+    /* 0x1190 */ cXyz m1190;
+    /* 0x119C */ cXyz m119C;
     /* 0x11A8 */ cXyz m11A8;
     /* 0x11B4 */ u8 m11B4[0x11CC - 0x11B4];
     /* 0x11CC */ cXyz m11CC;

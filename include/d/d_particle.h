@@ -74,6 +74,13 @@ public:
     virtual void setup(JPABaseEmitter*, cXyz const*, csXyz const*, s8);
     virtual void end();
 
+    void setTevStr(dKy_tevstr_c* tevStr) { mTevstr = tevStr; }
+    void remove() { end(); }
+
+    void offWindOff() {}
+    void onWindOff() {}
+    void setColor(const GXColor&) {}
+
     /* 0x14 */ s8 field_0x14;
     /* 0x15 */ u8 field_0x15;
     /* 0x16 */ GXColor field_0x16;

@@ -20,7 +20,7 @@ struct msg_process_profile_definition {
 struct fopMsg_prm_class {
     /* 0x00 */ fopAc_ac_c* mpActor;
     /* 0x04 */ cXyz mPos;
-    /* 0x10 */ u32 mMsgID;
+    /* 0x10 */ u32 mMsgNo;
     /* 0x14 */ u32 field_0x14;
     /* 0x18 */ int field_0x18;
 };  // Size: 0x1C
@@ -63,19 +63,19 @@ u32 fopMsgM_Create(s16, fopMsgCreateFunc, void*);
 s32 fopMsgM_create(s16 param_0, fopAc_ac_c* param_1, cXyz* param_2, u32* param_3, u32* param_4, fopMsgCreateFunc createFunc);
 void fopMsgM_Delete(void* process);
 fopMsg_prm_class* fopMsgM_GetAppend(void* msg);
-void fopMsgM_setMessageID(unsigned int);
+void fopMsgM_setMessageID(uint);
 void fopMsgM_destroyExpHeap(JKRExpHeap*);
 f32 fopMsgM_valueIncrease(int param_0, int param_1, u8 param_2);
 s32 fopMsgM_setStageLayer(void*);
-int fopMsgM_messageSet(u32 i_msgNo, fopAc_ac_c* i_actorP);
-int fopMsgM_messageSet(u32 param_0, cXyz*);
-int fopMsgM_messageSet(u32 param_0);
+uint fopMsgM_messageSet(u32 i_msgNo, fopAc_ac_c* i_actorP);
+uint fopMsgM_messageSet(u32 param_0, cXyz*);
+uint fopMsgM_messageSet(u32 param_0);
 int fopMsgM_messageSetDemo(u32 param_0);
-msg_class* fopMsgM_SearchByID(unsigned int param_0);
+msg_class* fopMsgM_SearchByID(uint param_0);
 char* fopMsgM_messageGet(char* msg, u32 string_id);
-s32 fop_Timer_create(s16 param_0, u8 param_1, u16 param_2, u8 param_3, u8 param_4, f32 param_5,
+uint fop_Timer_create(s16 param_0, u8 param_1, u16 param_2, u8 param_3, u8 param_4, f32 param_5,
                      f32 param_6, f32 param_7, f32 param_8, fopMsgCreateFunc createFunc);
-inline s32 fopMsgM_Timer_create(s16 param_0, u8 param_1, u32 param_2, u8 param_3, u8 param_4,
+inline uint fopMsgM_Timer_create(s16 param_0, u8 param_1, u32 param_2, u8 param_3, u8 param_4,
                                 f32 param_5, f32 param_6, f32 param_7, f32 param_8,
                                 fopMsgCreateFunc createFunc) {
     return fop_Timer_create(param_0, param_1, param_2, param_3, param_4, param_5, param_6, param_7,

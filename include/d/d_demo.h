@@ -111,7 +111,7 @@ public:
     /* 0x4C */ u32 field_0x4c;
     /* 0x50 */ const void* field_0x50;
     /* 0x54 */ u32 field_0x54;
-    /* 0x58 */ s32 mActorPcId;
+    /* 0x58 */ uint mActorPcId;
     /* 0x5C */ s32 mBckId;
     /* 0x60 */ s32 mBtpId;
     /* 0x64 */ s32 mBtkId;
@@ -169,8 +169,8 @@ public:
     void JSGSetLightType(JStage::TELight);
     void JSGSetPosition(const Vec&);
     void JSGSetColor(_GXColor);
-    void JSGSetDistanceAttenuation(f32, f32, _GXDistAttnFn);
-    void JSGSetAngleAttenuation(f32, _GXSpotFn);
+    void JSGSetDistanceAttenuation(f32, f32, GXDistAttnFn);
+    void JSGSetAngleAttenuation(f32, GXSpotFn);
     void JSGSetDirection(const Vec&);
 
 private:
