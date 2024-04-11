@@ -59,30 +59,27 @@ void room_disp(bgn_class*) {
 
 /* 00001898-0000192C       .text ten_a_d_sub__FPvPv */
 fopAc_ac_c* ten_a_d_sub(void* i_this, void*) {
-    /* Nonmatching */
-    
-    // if (fopAc_IsActor(i_this)) {
-    //     if (((fopAc_ac_c*)i_this)->base.mProcName == PROC_Obj_Vteng) {
-    //         if ((*((ki_class*)i_this)).model != NULL) {
-    //                 (*((ki_class*)i_this)).model += 0x10000;
-    //         }
-    //         J3DDrawBuffer* buffer = dComIfGd_getOpaListSky();
-    //         buffer->entryImm(((ki_class*)i_this)->mpPacket, 0);
-    //         return (fopAc_ac_c*)i_this;
-    //     }
-    // }
-    // return NULL;
+    if (fopAc_IsActor(i_this)) {
+        if (((fopAc_ac_c*)i_this)->base.mProcName == PROC_Obj_Vteng) {
+            if (((ki_class*)i_this)->model != NULL && bgn->base.mBsType != 0) {
+                J3DDrawBuffer* buffer = dComIfGd_getOpaListSky();
+                buffer->entryImm(((ki_class*)i_this)->mpPacket, ((ki_class*)i_this)->base.mBsType + 0x10000);
+            } 
+            return (fopAc_ac_c*)i_this;
+        }
+    }
+    return NULL;
 }
 
 /* 0000192C-00001998       .text ki_a_d_sub__FPvPv */
 fopAc_ac_c* ki_a_d_sub(void* i_this, void*) {
-    // Incomplete
     if (fopAc_IsActor(i_this)) {
         if (((fopAc_ac_c*)i_this)->base.mProcName == PROC_KI) {
             if ((*((ki_class*)i_this)).model != NULL) {
+                ((ki_class*)i_this)->mpModel = (*((ki_class*)i_this)).model;
                 J3DDrawBuffer* buffer = dComIfGd_getOpaListSky();
-                buffer->entryImm(((ki_class*)i_this)->mpPacket, 0);
-                return (fopAc_ac_c*)i_this;
+                buffer->entryImm(reinterpret_cast<J3DPacket*>((s32)i_this + 0x2b8), 0);
+                
             }
         }
     }

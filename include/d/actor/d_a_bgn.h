@@ -15,7 +15,8 @@ class bgn_class : public fopAc_ac_c {
 public:
     /* 0x0290 */ u8 m0290[0xadb0 - 0x290];
     /* 0xADB0 */ u8 mADB0;
-    /* 0xADB1 */ u8 mADB1[0xc74c - 0xadb0];
+    /* 0xADB1 */ u8 mADB1[0xcc34 - 0xadb1];
+    /* 0xCC34 */ u8 mCC34;
 };
 
 class daBgn_HIO_c {
