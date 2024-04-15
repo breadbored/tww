@@ -17,6 +17,8 @@ public:
     /* 0xADB0 */ u8 mADB0;
     /* 0xADB1 */ u8 mADB1[0xcc34 - 0xadb1];
     /* 0xCC34 */ u8 mCC34;
+    /* 0xCC35 */ u8 mCC35[0xcc7c - 0xcc35];
+    /* 0xCC7C */ s8 mCC7C;
 };
 
 class daBgn_HIO_c {

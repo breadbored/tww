@@ -15,6 +15,7 @@
 #include "d/d_s_play.h"
 
 static bgn_class* bgn = NULL;
+static s16 l_HIO[0x17c];
 static u32 ki_all_count = 0;
 
 /* 000000EC-000003F0       .text __ct__11daBgn_HIO_cFv */
@@ -79,7 +80,7 @@ fopAc_ac_c* ki_a_d_sub(void* i_this, void*) {
                 ((ki_class*)i_this)->mpModel = (*((ki_class*)i_this)).model;
                 J3DDrawBuffer* buffer = dComIfGd_getOpaListSky();
                 buffer->entryImm(reinterpret_cast<J3DPacket*>((s32)i_this + 0x2b8), 0);
-                
+        
             }
         }
     }
@@ -228,8 +229,17 @@ void dance_B(bgn_class*) {
 }
 
 /* 00005ACC-00005B2C       .text ki_set__FP9bgn_class */
-void ki_set(bgn_class*) {
-    /* Nonmatching */
+void ki_set(bgn_class* i_this) {
+    s8 health = i_this->health;
+    if (health == 0x3) {
+        i_this->mCC7C = l_HIO[0x174 / 2];
+        return;
+    } else if (health == 0x2) {
+        i_this->mCC7C = l_HIO[0x176 / 2];
+        return;
+    }
+    i_this->mCC7C = l_HIO[0x178 / 2];
+    return;
 }
 
 /* 00005B2C-0000616C       .text dance_0__FP9bgn_class */
