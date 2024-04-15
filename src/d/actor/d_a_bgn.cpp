@@ -15,7 +15,7 @@
 #include "d/d_s_play.h"
 
 static bgn_class* bgn = NULL;
-static s16 l_HIO[0x17c];
+static s16 l_HIO[0xBE];
 static u32 ki_all_count = 0;
 
 /* 000000EC-000003F0       .text __ct__11daBgn_HIO_cFv */
